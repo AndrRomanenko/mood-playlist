@@ -7,12 +7,8 @@ const fmt = (x, digits = 1) => format(`.${digits}%`)(x)
 
 const Summary = ({ total, happy }) => (
   <Message bg="yellow">
-    <strong>Results:</strong> Of <strong>{total}</strong>{' '}
-    {total > 1 ? 'people' : 'person'} detected,{' '}
-    <strong>
-      {happy} ({fmt(happy / total, 0)})
-    </strong>{' '}
-    {happy === 1 ? 'is' : 'are'} happy.
+    <strong>Results:</strong> Emotions of <strong>{total}</strong>{' '}
+    {total > 1 ? 'people' : 'person'} detected!
   </Message>
 )
 
