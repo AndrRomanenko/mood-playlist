@@ -2,9 +2,6 @@ import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
 import Dropzone from 'react-dropzone'
 
-import Footer from './Footer'
-import Header from './Header'
-import Message from './Message'
 import Results from './Results'
 
 import sampleImg from '../img/sample.jpg'
@@ -118,7 +115,6 @@ class App extends Component {
 
     return (
       <div className="px2 mx-auto container app">
-        <Header />
         <main>
           <div className="py1">
             <Dropzone
@@ -145,17 +141,13 @@ class App extends Component {
               />
             </div>
           )}
-          {!ready && <Message>Loading machine learning models...</Message>}
-          {loading && <Message>Analyzing image...</Message>}
+          {!ready && 'Loading machine learning models..'}
+          {loading && 'Analyzing image...'}
           {noFaces && (
-            <Message bg="red" color="white">
-              <strong>Sorry!</strong> No faces were detected. Please try another
-              image.
-            </Message>
+            alert("No faces found!")
           )}
           {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
         </main>
-        <Footer />
       </div>
     )
   }
