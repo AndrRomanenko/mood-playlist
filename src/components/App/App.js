@@ -1,13 +1,13 @@
 import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
-import Dropzone from 'react-dropzone'
 
-import Results from './Results';
-import Camera from './Camera';
+import Results from '../Results';
+import Camera from '../Camera';
+import Message from '../Message';
 
-import { FaceFinder } from '../ml/face'
-import { EmotionNet } from '../ml/models'
-import { readFile, nextFrame, drawBox, drawText } from '../util'
+import { FaceFinder } from '../../ml/face'
+import { EmotionNet } from '../../ml/models'
+import { nextFrame } from '../../util'
 
 class App extends Component {
   state = {
@@ -46,71 +46,31 @@ class App extends Component {
   };
 
   handleImgLoaded = () => {
-    this.clearCanvas();
     this.analyzeFaces();
   };
 
   handleResize = debounce(() => this.drawDetections(), 100);
-
-  handleUpload = async files => {
-    if (!files.length) return;
-    const fileData = await readFile(files[0]);
-    this.setState({
-      imgUrl: fileData.url,
-      loading: true,
-      detections: [],
-      faces: [],
-      emotions: []
-    });
-  };
 
   analyzeFaces = async () => {
     await nextFrame();
 
     if (!this.models) return;
 
-    // get face bounding boxes and canvases
     const faceResults = await this.models.face.findAndExtractFaces(this.img);
     const { detections, faces } = faceResults;
 
-    // get emotion predictions
     let emotions = await Promise.all(
       faces.map(async face => await this.models.emotion.classify(face))
     );
 
     this.setState(
       { loading: false, detections, faces, emotions },
-      this.drawDetections
     );
-  };
-
-  clearCanvas = () => {
-    this.canvas.width = 0;
-    this.canvas.height = 0;
-  };
-
-  drawDetections = () => {
-    const { detections, emotions } = this.state;
-    if (!detections.length) return;
-
-    const { width, height } = this.img;
-    this.canvas.width = width;
-    this.canvas.height = height;
-
-    const ctx = this.canvas.getContext("2d");
-    const detectionsResized = detections.map(d => d.forSize(width, height));
-
-    detectionsResized.forEach((det, i) => {
-      const { x, y } = det.box;
-      const { emoji } = emotions[i][0].label;
-
-      drawBox({ ctx, ...det.box });
-      drawText({ ctx, x, y, text: emoji });
-    });
   };
 
   setWebcamPic = (pic) => {
     this.setState({ imgUrl: pic });
+    this.analyzeFaces();
   };
 
   render() {
@@ -122,15 +82,6 @@ class App extends Component {
         <main>
           <div className="py1">
             <Camera onCapture={this.setWebcamPic}/>
-            <Dropzone
-              className="btn btn-small btn-primary btn-upload bg-black h5"
-              accept="image/jpeg, image/png"
-              multiple={false}
-              disabled={!ready}
-              onDrop={this.handleUpload}
-            >
-              Upload image
-            </Dropzone>
           </div>
           {imgUrl && (
             <div className="relative">
@@ -148,6 +99,11 @@ class App extends Component {
           )}
           {!ready && "Loading machine learning models.."}
           {loading && "Analyzing image..."}
+          {noFaces && (
+            <Message bg="red" color="white">
+              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
+            </Message>
+          )}
           {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
         </main>
       </div>
@@ -155,4 +111,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default App;
