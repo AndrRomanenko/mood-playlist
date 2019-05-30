@@ -4,10 +4,13 @@ import React, { Component } from 'react'
 import Results from '../Results';
 import Camera from '../Camera';
 import Message from '../Message';
+import Player from '../Player';
 
 import { FaceFinder } from '../../ml/face'
 import { EmotionNet } from '../../ml/models'
 import { nextFrame } from '../../util'
+
+import styles from './app.module.css';
 
 class App extends Component {
   state = {
@@ -49,8 +52,6 @@ class App extends Component {
     this.analyzeFaces();
   };
 
-  handleResize = debounce(() => this.drawDetections(), 100);
-
   analyzeFaces = async () => {
     await nextFrame();
 
@@ -83,8 +84,14 @@ class App extends Component {
           <div className="py1">
             <Camera onCapture={this.setWebcamPic}/>
           </div>
+          {noFaces && (
+            <Message bg="red" color="white">
+              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
+            </Message>
+          )}
+          {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
           {imgUrl && (
-            <div className="relative">
+            <div className={styles.hided}>
               <img
                 ref={el => (this.img = el)}
                 onLoad={this.handleImgLoaded}
@@ -99,12 +106,7 @@ class App extends Component {
           )}
           {!ready && "Loading machine learning models.."}
           {loading && "Analyzing image..."}
-          {noFaces && (
-            <Message bg="red" color="white">
-              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
-            </Message>
-          )}
-          {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
+          <Player />
         </main>
       </div>
     );
