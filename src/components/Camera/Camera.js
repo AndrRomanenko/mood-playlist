@@ -18,7 +18,8 @@ const Camera = (props) => {
   const videoConstraints = {
     width: 1920,
     height: 1080,
-    facingMode: "user"
+    facingMode: "user",
+    screenshotQuality: 1,
   };
 
   return (

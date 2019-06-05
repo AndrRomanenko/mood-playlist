@@ -1,4 +1,3 @@
-import debounce from 'lodash.debounce'
 import React, { Component } from 'react'
 
 import Results from '../Results';
@@ -10,7 +9,7 @@ import { FaceFinder } from '../../ml/face'
 import { EmotionNet } from '../../ml/models'
 import { nextFrame } from '../../util'
 
-import styles from './app.module.css';
+import './App.css';
 
 class App extends Component {
   state = {
@@ -79,19 +78,35 @@ class App extends Component {
     const noFaces = ready && !loading && imgUrl && !faces.length;
 
     return (
-      <div className="px2 mx-auto container app">
-        <main>
-          <div className="py1">
-            <Camera onCapture={this.setWebcamPic}/>
-          </div>
-          {noFaces && (
-            <Message bg="red" color="white">
-              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
+      <React.Fragment>
+
+        {!ready && "Loading machine learning models.."}
+        {loading && "Analyzing image..."}
+        {noFaces && (
+          <Message bg="red" color="white">
+            <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
             </Message>
-          )}
+        )}
+
+        <div className='app-container'>
+          <div className="section card playlist">
+            Playlist
+          </div>
+          <div className="section card camera">
+            <Camera onCapture={this.setWebcamPic} />
+          </div>
+          <div className="section card player">
+            <Player />
+            <div className="buttons">
+
+            </div>
+          </div>
+        </div>
+
+        <div className="results">
           {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
           {imgUrl && (
-            <div className={styles.hided}>
+            <div className='some'>
               <img
                 ref={el => (this.img = el)}
                 onLoad={this.handleImgLoaded}
@@ -104,11 +119,8 @@ class App extends Component {
               />
             </div>
           )}
-          {!ready && "Loading machine learning models.."}
-          {loading && "Analyzing image..."}
-          <Player />
-        </main>
-      </div>
+        </div>
+      </React.Fragment>
     );
   }
 }
