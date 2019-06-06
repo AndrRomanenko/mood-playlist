@@ -1,14 +1,31 @@
 import React from "react";
-import './Play'
-
+import './Playlist.css';
 
 const Playlist = (props) => {
+
+  const { tracks } = props;
   return (
-    <div className="pl-header">
-      <div className="track-col">Track</div>
-      <div className="link-col">Soundcloud</div>
-    </div>
+    <React.Fragment>
+      <div className="row-container pl-header">
+        <div className="track-col">Track</div>
+        <div className="link-col">Soundcloud</div>
+      </div>
+      {
+        tracks.map((obj) => {
+          return (
+            <div className="row-container">
+              <div className="track-col">{obj.name}</div>
+              <div className="link-col">
+                <div className="button">
+                  <a href={obj.link}>Go</a>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+    </React.Fragment>
   );
 }
 
-export default Player;
+export default Playlist;

@@ -4,10 +4,12 @@ import Results from '../Results';
 import Camera from '../Camera';
 import Message from '../Message';
 import Player from '../Player';
+import Playlist from '../Playlist';
 
 import { FaceFinder } from '../../ml/face'
 import { EmotionNet } from '../../ml/models'
 import { nextFrame } from '../../util'
+import { tracks } from './app.helper';
 
 import './App.css';
 
@@ -82,44 +84,48 @@ class App extends Component {
 
         {!ready && "Loading machine learning models.."}
         {loading && "Analyzing image..."}
-        {noFaces && (
-          <Message bg="red" color="white">
-            <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
-            </Message>
-        )}
 
-        <div className='app-container'>
+        <div className='content-container'>
+
           <div className="section card playlist">
-            Playlist
+            <Playlist tracks={tracks} />
           </div>
+
           <div className="section card camera">
             <Camera onCapture={this.setWebcamPic} />
           </div>
+
           <div className="section card player">
             <Player />
-            <div className="buttons">
-
-            </div>
           </div>
         </div>
 
         <div className="results">
-          {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
-          {imgUrl && (
-            <div className='some'>
-              <img
-                ref={el => (this.img = el)}
-                onLoad={this.handleImgLoaded}
-                src={imgUrl}
-                alt=""
-              />
-              <canvas
-                ref={el => (this.canvas = el)}
-                className="absolute top-0 left-0"
-              />
-            </div>
+          {noFaces && (
+            <Message bg="red" color="white">
+              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
+            </Message>
           )}
+
+          <div>
+            {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
+            {imgUrl && (
+              <div className='some'>
+                <img
+                  ref={el => (this.img = el)}
+                  onLoad={this.handleImgLoaded}
+                  src={imgUrl}
+                  alt=""
+                />
+                <canvas
+                  ref={el => (this.canvas = el)}
+                  className="absolute top-0 left-0"
+                />
+              </div>
+            )}
+          </div>
         </div>
+
       </React.Fragment>
     );
   }

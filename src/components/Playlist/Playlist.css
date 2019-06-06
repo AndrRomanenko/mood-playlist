@@ -1,0 +1,42 @@
+.row-container {
+  display: flex;
+  flex-direction: row;
+  height: 50px;
+  border-bottom: 1px solid gray;
+  align-items: center;
+}
+
+.pl-header {
+  font-size: 20px;
+  font-weight: bold;
+  height: 60px;
+  background:#ffffff94;
+}
+
+.track-col {
+  width: 70%;
+  padding-left: 20px;
+}
+
+.link-col {
+  display: flex;
+  justify-content: center;
+  width: 30%;
+}
+
+.button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 45px;
+  height: 30px;
+  background: orange;
+  border: 1px solid gray;
+  border-radius: 5px;
+}
+
+.button > a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold
+}
