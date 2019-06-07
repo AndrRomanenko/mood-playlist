@@ -22,3 +22,7 @@
 .some {
   display: none;
 }
+
+.results {
+  margin-top: 30px;
+}

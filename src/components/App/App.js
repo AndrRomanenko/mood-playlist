@@ -82,9 +82,6 @@ class App extends Component {
     return (
       <React.Fragment>
 
-        {!ready && "Loading machine learning models.."}
-        {loading && "Analyzing image..."}
-
         <div className='content-container'>
 
           <div className="section card playlist">
@@ -100,14 +97,18 @@ class App extends Component {
           </div>
         </div>
 
-        <div className="results">
-          {noFaces && (
-            <Message bg="red" color="white">
-              <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
-            </Message>
-          )}
+        <div className="content-container">
+          <div className="section card results">
 
-          <div>
+            {!ready && "Loading machine learning models.."}
+            {loading && "Analyzing image..."}
+
+            {noFaces && (
+              <Message bg="red" color="white">
+                <strong>Sorry!</strong> Poor quality or no faces were detected. Please try to take closer shot
+            </Message>
+            )}
+
             {faces.length > 0 && <Results faces={faces} emotions={emotions} />}
             {imgUrl && (
               <div className='some'>
