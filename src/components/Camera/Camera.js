@@ -1,5 +1,6 @@
 import React from "react";
 import Webcam from "react-webcam";
+import './Camera.css';
 
 
 const Camera = (props) => {
@@ -23,14 +24,16 @@ const Camera = (props) => {
   };
 
   return (
-    <div>
+    <div className="cam-container">
       <Webcam
         audio={false}
         ref={setRef}
         screenshotFormat="image/jpeg"
         videoConstraints={videoConstraints}
       />
-      <button onClick={capture}>Get emotion!</button>
+      <button
+        className="c-button"
+        onClick={capture}>Get emotion!</button>
     </div>
   );
 }
